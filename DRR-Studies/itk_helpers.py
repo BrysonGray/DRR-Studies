@@ -127,7 +127,7 @@ def print_direction(imageDirection,DimensionOut):
     vnlMatrix = imageDirection.GetVnlMatrix()
     for i in range(DimensionOut):
         for j in range(DimensionOut):
-            print "{:>8.4f}".format(vnlMatrix.get(i,j)),
+            print("{:>8.4f}".format(vnlMatrix.get(i,j))),
         print
 
 def get_transform_direction(transform):

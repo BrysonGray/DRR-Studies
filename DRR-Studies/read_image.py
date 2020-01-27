@@ -108,11 +108,23 @@ def get_itk_image_type(file_name):
     imageIO.ReadImageInformation()
 
     # Get pixel type and dimension
-    pixel_type_as_string = imageIO.GetComponentTypeAsString(imageIO.GetComponentType())
-    pixel_type = get_itk_image_type.component_type_to_itk_type_dict[pixel_type_as_string]
     dimensions = imageIO.GetNumberOfDimensions()
+    pixel_type_as_string = imageIO.GetComponentTypeAsString(imageIO.GetComponentType())
+    print(pixel_type_as_string)
+    if pixel_type_as_string == "int":
+        pixel_type_as_string = "signed_short"
+    pixel_type = get_itk_image_type.component_type_to_itk_type_dict[pixel_type_as_string]
+    print(pixel_type)
+    img_obj = itk.Image[pixel_type, dimensions]
+    # for k, pixel_type in get_itk_image_type.component_type_to_itk_type_dict.items():
+        # try:
+            # img_obj = itk.Image[pixel_type, dimensions]
+            # break
+        # except:
+            # print(k, "failed.")
 
-    return itk.Image[pixel_type, dimensions]
+    # print(k, "succeeded.")
+    return img_obj
 
 # Create dictionary to map from ImageIOBase type to ctype
 get_itk_image_type.component_type_to_itk_type_dict = {
@@ -120,5 +132,5 @@ get_itk_image_type.component_type_to_itk_type_dict = {
     'unsigned_char':    itk.UC, 'unsigned_short':   itk.US, 'unsigned_int': itk.UI,
     'unsigned_long':    itk.UL, 'signed_char':      itk.SC, 'signed_short': itk.SS,
     'signed int':       itk.SI, 'signed_long':      itk.SL, 'bool':         itk.B,
-    'short':            itk.SS
+    'short':            itk.SS, 'int':              itk.SS,
 }
