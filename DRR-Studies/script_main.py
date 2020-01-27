@@ -12,9 +12,9 @@ from read_image import get_itk_image_type
 import main_functions 
 import os
 
-from StereoFlouroscopyRegistration.io.read_image import get_itk_image_type
+# from read_image import get_itk_image_type
 
-input_filename = '/Users/pzandiyeh/Documents/Storage/Projects/Registration/QuickData/knee_ct_volume_identity.nii'
+input_filename = r'\\dingo\scratch\pteng\dataset\rawlung\image\108061.nii.gz'
 output_filename = ['knee_test_cam1.nii', # output file name 1 
                    'knee_test_cam2.nii'] # output file name 2
 
@@ -22,10 +22,11 @@ verbose = False          # verbose details of all steps.
 
 #% -------------------- Reader -------------------------
 InputImageType = get_itk_image_type(input_filename)
+print(InputImageType)
 OutputImageType= InputImageType
 
 
-inputImage = itk.imread(input_filename)
+inputImage = itk.imread(input_filename, itk.SS)
 
 #%% Set input information
 sizeOutput = [1024,1400,1] # The size of output image
@@ -46,16 +47,16 @@ directionOutput = np.matrix([[  1.,  0.,  0.],
                              [  0.,  0.,  1.]])
 #%%
 
-for counter_x in range(0,5,5): # Rotation in x
+for counter_x in range(90,100,90): # Rotation in x (rotated 90 degrees)
     for counter_y in range(0,5,5): # Rotation in y
         for counter_z in range(0,5,5): # Rotation in z
             rot = [float(counter_x),float(counter_y),float(counter_z)] # Making the rotation into an array
             print(rot)
-            output_directory = "/Users/pzandiyeh/Desktop/OutputImages" # output directory
+            output_directory = r"M:\apps\personal\bgray\drr_out" # output directory
             if not os.path.exists(output_directory): # If the directory is not existing , create one. 
                 os.mkdir(output_directory) # Make the directory
-            filetype = '.nii' # type of output image ... it can be nifti or dicom
-            filename = 'rx_'+str(int(rot[0])) + 'ry_'+str(int(rot[1])) + 'rz_'+str(int(rot[2]))+filetype # makes the complete path
+            filetype = '.dcm' # type of output image ... it can be nifti or dicom
+            filename = 'rx_'+str(int(rot[0])) + 'ry_'+str(int(rot[1])) + 'rz_'+str(int(rot[2]))+'9'+filetype # makes the complete path
             output_filename = os.path.join(output_directory,filename) # creating the output directory where all the images are stored.
             main_functions.drr(inputImage,output_filename,rot,t,focalPoint,originOutput,sizeOutput,cor,spaceOutput,directionOutput,threshold,InputImageType,OutputImageType,verbose) # creating drr. 
             
